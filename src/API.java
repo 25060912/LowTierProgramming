@@ -90,7 +90,7 @@ public class API {
         API api = new API();
 
         // Load environment variables from .env file (custom loader)
-        Map<String, String> env = EnvLoader.loadEnv(".env");
+        Map<String, String> env = EnvLoader.loadEnv("data/.env");
 
         try {
             // --- Example GET request: Fetch latest weather forecast for Kuala Lumpur ---
