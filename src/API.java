@@ -3,7 +3,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Map;
+import java.util.*;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class API {
 
@@ -85,6 +90,16 @@ public class API {
         return sb.toString();
     }
 
+    public static String capitalizeFirstLetter(String str) {
+        if (str == null || str.isEmpty()) return str;
+        String[] words = str.trim().toLowerCase().split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        for (String word : words) {
+            sb.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
+        }
+        return sb.toString().trim();
+    }
+
     // Example usage
     public static void main(String[] args) {
         API api = new API();
@@ -94,9 +109,18 @@ public class API {
 
         try {
             // --- Example GET request: Fetch latest weather forecast for Kuala Lumpur ---
-            String getUrl = "https://api.data.gov.my/weather/forecast/?contains=WP%20Kuala%20Lumpur@location__location_name&sort=date&limit=1";
+            Scanner sc = new Scanner(System.in);
+            String userLocation = sc.nextLine();
+            userLocation = capitalizeFirstLetter(userLocation);
+
+            String encodedLocation = URLEncoder.encode(userLocation, "UTF-8");
+            String getUrl = "https://api.data.gov.my/weather/forecast/?contains="+encodedLocation+"@location__location_name&sort=date&limit=1";
             String getResponse = api.get(getUrl);
-            System.out.println("GET Response:\n" + getResponse);
+            
+            JSONArray forecastArray = new JSONArray(getResponse);
+            JSONObject forecast = forecastArray.getJSONObject(0);
+            String summaryForecast = forecast.getString("summary_forecast");
+            System.out.println("GET Response: "+summaryForecast);
 
             // --- Example POST request: Perform sentiment analysis using HuggingFace model ---
             String journalInput = "I spent my free time with my friends today. We had a great time at the park and enjoyed the sunny weather.";
@@ -114,7 +138,13 @@ public class API {
 
             // Call POST
             String postResponse = api.post(postUrl, bearerToken, jsonBody);
-            System.out.println("\nSentiment Analysis Response:\n" + postResponse);
+
+            JSONArray outerArray = new JSONArray(postResponse);
+            JSONArray innerArray = outerArray.getJSONArray(0);
+            JSONObject topResult = innerArray.getJSONObject(0);
+            String topLabel = topResult.getString("label");
+            
+            System.out.println("Sentiment Analysis Response: "+topLabel);
 
         } catch (Exception e) {
             e.printStackTrace();

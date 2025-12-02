@@ -1,8 +1,6 @@
 import java.util.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class nopal {
-    public static void main(String[] args) {
-        Map<String, String> env = EnvLoader.loadEnv("data/.env");
-        
-    }
 }
