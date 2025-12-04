@@ -1,9 +1,9 @@
 package API;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -23,7 +23,8 @@ public class API {
      * @throws Exception if the request fails
      */
     private String get(String apiURL) throws Exception {
-        URL url = new URL(apiURL);
+        URI uri = new URI(apiURL);
+        URL url = uri.toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
         // Set HTTP method and headers
