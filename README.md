@@ -22,16 +22,12 @@ Change directory to the project folder
 
 CREATE YOUR OWN .ENV FILE:
 If you want to run the codes that are related to the AI calls, you need an API key. 
-- Go to https://huggingface.co/
-- Click on profile picture in top right
-- Click "Access Tokens"
-- Create new token, name it whatever
-- Check everything under "Inference" section. Leave everything else untouched
-- Create the key, and copy it
-- If you cloned the repository correctly, there should be a "data" folder with Sample.txt inside it.
-- Create a new file called ".env"
-- Type this into the file: BEARER_TOKEN=pasteyourkeyhere
-- Save that, and now you can run the AI calls to test whatever
+- Go to https://aistudio.google.com/api-keys
+- Create API key (top right)
+- Name it whatever, choose "Default Gemini Project" as imported project
+- Copy the key
+- Create a new file inside the data folder named ".env" without the ""
+- Type `GEMINI_TOKEN=yourtokenhere` inside the file
 
 IMPORTANT !! 
 DO NOT ADD OR COMMIT YOUR .ENV FILE TO THE REPOSITORY!!
