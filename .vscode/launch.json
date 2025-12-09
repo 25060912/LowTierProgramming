@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // CONFIGURATION A: The Run/Debug Button (The one that keeps failing)
+            // Keep this here, as it may work for your team members.
+            "type": "java",
+            "name": "Launch JavaFX App",
+            "request": "launch",
+            "mainClass": "app.mainApp",
+            "vmArgs": [
+                "--module-path",
+                "${auto:maven.classpath}",
+                "--add-modules",
+                "javafx.controls,javafx.fxml,javafx.graphics"
+            ]
+        },
+        {
+            // CONFIGURATION B: The Guaranteed Debugger (The foolproof method)
+            "type": "java",
+            "name": "Attach to Mvn Debug",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 5005
+        }
+    ]
+}

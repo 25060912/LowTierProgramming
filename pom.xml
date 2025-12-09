@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <javafx.version>22</javafx.version>
-        <main.class>logic.LeeyaWelcomePage</main.class>
+        <main.class>app.mainApp</main.class>
     </properties>
 
     <dependencies>
@@ -67,7 +67,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>logic.LeeyaWelcomePage</mainClass>
+                    <mainClass>app.mainApp</mainClass>
                 </configuration>
             </plugin>
 
@@ -76,7 +76,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>logic.LeeyaWelcomePage</mainClass>
+                    <mainClass>app.mainApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>
