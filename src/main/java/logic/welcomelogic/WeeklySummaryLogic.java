@@ -1,4 +1,4 @@
-package welcomelogic;
+package logic.welcomelogic;
 
 import java.util.*;
 

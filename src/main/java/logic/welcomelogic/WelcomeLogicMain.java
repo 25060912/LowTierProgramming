@@ -1,5 +1,6 @@
-package welcomelogic;
+package logic.welcomelogic;
 
+import logic.welcomeAndSummary.*;
 import java.util.Scanner;
 
 public class WelcomeLogicMain {
