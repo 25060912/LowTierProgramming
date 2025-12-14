@@ -29,8 +29,10 @@ public class LoginPage {
                     String loginPassword = scanner.nextLine();
                     
                     if (auth.authenticate(loginId, loginPassword)) {
+                        
+                        String username = auth.getUsername(loginId); //get username from database
                         System.out.println("Login successful!");
-                        System.out.println("Welcome! You can now access the main application.");
+                        System.out.println("Welcome, " + username+ "! You can now access the main application.");
                         loggedIn = true;
                     } else {
                         System.out.println("Login failed! Invalid credentials.");
@@ -45,6 +47,13 @@ public class LoginPage {
                     System.out.print("Enter password: ");
                     String password = scanner.nextLine();
                     
+                    //password confrimation
+                    System.out.print("Confirm password: ");
+                    String confirmPassword = scanner.nextLine();
+                    if (!password.equals(confirmPassword)) {
+                    System.out.println("Passwords do not match! Please try again.");
+                    break;  
+                    }
                     auth.registerUser(username, email, password);
                     break;
                     
