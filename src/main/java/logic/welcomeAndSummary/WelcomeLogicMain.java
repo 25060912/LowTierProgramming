@@ -1,8 +1,6 @@
 package logic.welcomeAndSummary;
 
-import java.util.Scanner;
 import logic.welcomelogic.WeeklySummaryLogic;
-import logic.loginDatabase.*;
 
 public class WelcomeLogicMain {
     private String username;
@@ -12,8 +10,6 @@ public class WelcomeLogicMain {
     }
 
     public void run() {
-
-        Scanner input = new Scanner(System.in);
 
         // --- Greeting Logic ---
         String greeting = GreetingLogic.getGreeting(username);
@@ -43,6 +39,5 @@ public class WelcomeLogicMain {
 
         System.out.println(summary.getWeeklySummary());
 
-        input.close();
     }
 }

@@ -7,11 +7,14 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.util.*;
 
+import javax.management.RuntimeErrorException;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
+import com.google.gson.*;
 
 public class API {
 
@@ -48,35 +51,69 @@ public class API {
         return sb.toString();
     }
 
-    private static String capitalizeFirstLetter(String str) {
-        if (str == null || str.isEmpty()) return str;
-        String[] words = str.trim().toLowerCase().split("\\s+");
-        StringBuilder sb = new StringBuilder();
-        for (String word : words) {
-            sb.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
-        }
-        return sb.toString().trim();
+    public class GeoLocation {
+        double lat;
+        double lon;
+        String name;
+        String country;
+        String state;
     }
 
-    // Example usage
-    public String weatherAPI(String userLocation) {
-        API api = new API();
+    public GeoLocation getCoordinates(String userLocation) {
         try {
-            // --- Example GET request: Fetch latest weather forecast for Kuala Lumpur ---
-            userLocation = capitalizeFirstLetter(userLocation);
+            Map<String, String> env = EnvLoader.loadEnv("data/.env");
+            String apiKey = env.get("OPENWEATHER_TOKEN");
+
             String encodedLocation = URLEncoder.encode(userLocation, "UTF-8");
 
-            String getUrl = "https://api.data.gov.my/weather/forecast/?contains="+encodedLocation+"@location__location_name&sort=date&limit=1";
-            String getResponse = api.get(getUrl);
-            
-            JSONArray forecastArray = new JSONArray(getResponse);
-            JSONObject forecast = forecastArray.getJSONObject(0);
+            String url = "https://api.openweathermap.org/geo/1.0/direct?q="+encodedLocation+"&limit=1&appid="+apiKey;
+            String json = get(url);
 
-            return "GET response: "+forecast.getString("summary_forecast");
+            GeoLocation[] results = new Gson().fromJson(json, GeoLocation[].class);
+
+            if (results.length == 0) {
+                throw new RuntimeException("Location not found!: "+userLocation);
+            }
+            
+            return results[0];
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException("Geolocation failed", e);
         }
+    }
+
+    public static class openWeatherResponse {
+        public Main main;
+        public Weather[] weather;
+
+        public static class Main {
+            public double temp;
+            public double feels_like;
+            public int humidity;
+        }
+
+        public static class Weather {
+            public String main;
+            public String description;
+        }
+    }
+
+    public  openWeatherResponse getWeather(double lat, double lon) {
+        try {
+            Map<String, String> env = EnvLoader.loadEnv("data/.env");
+            String apiKey = env.get("OPENWEATHER_TOKEN");
+
+            String url = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=metric&appid="+apiKey;
+            String json = get(url);
+
+            return new Gson().fromJson(json, openWeatherResponse.class);
+        } catch (Exception e) {
+            throw new RuntimeException("OW Failed response");
+        }
+    }
+
+    public openWeatherResponse getWeatherByName(String userLocation) {
+        GeoLocation loc = getCoordinates(userLocation);
+        return getWeather(loc.lat, loc.lon);
     }
         
     public String geminiAPI(String journalInput) {

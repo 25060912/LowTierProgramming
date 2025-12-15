@@ -1,13 +1,11 @@
 package logic.loginDatabase;
 
-import java.util.Scanner;
-import logic.welcomeAndSummary.WelcomeLogicMain;
+import java.util.*;
 
 public class LoginPage {
     
-    public String run() {
+    public String run(Scanner sc) {
         UserAuthenticator auth = new UserAuthenticator();
-        Scanner scanner = new Scanner(System.in);
         
         System.out.println("=== User Authentication System ===");
 
@@ -19,15 +17,15 @@ public class LoginPage {
             System.out.println("3. Exit");
             System.out.print("Enter choice: ");
             
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            String input = sc.nextLine();
+            int choice = Integer.parseInt(input);
             
             switch (choice) {
                 case 1: // Login
                     System.out.print("Enter email/username: ");
-                    String loginId = scanner.nextLine();
+                    String loginId = sc.nextLine();
                     System.out.print("Enter password: ");
-                    String loginPassword = scanner.nextLine();
+                    String loginPassword = sc.nextLine();
                     
                     if (auth.authenticate(loginId, loginPassword)) {
                         
@@ -44,15 +42,15 @@ public class LoginPage {
                     
                 case 2: // Register
                     System.out.print("Enter username: ");
-                    String username = scanner.nextLine();
+                    String username = sc.nextLine();
                     System.out.print("Enter email: ");
-                    String email = scanner.nextLine();
+                    String email = sc.nextLine();
                     System.out.print("Enter password: ");
-                    String password = scanner.nextLine();
+                    String password = sc.nextLine();
                     
                     //password confrimation
                     System.out.print("Confirm password: ");
-                    String confirmPassword = scanner.nextLine();
+                    String confirmPassword = sc.nextLine();
                     if (!password.equals(confirmPassword)) {
                     System.out.println("Passwords do not match! Please try again.");
                     break;  
@@ -63,7 +61,6 @@ public class LoginPage {
                 case 3: // Exit
                     System.out.println("Exiting application...");
                     auth.close();
-                    scanner.close();
                     System.exit(0);
                     break;
                     

@@ -9,13 +9,26 @@ import UI.*;
 
 public class mainApp {
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        API api = new API();
 
         LoginPage loginPage = new LoginPage();
-        String username = loginPage.run();
+        String username = loginPage.run(sc);
 
         if (username == null) return;
 
         WelcomeLogicMain welcomeLogic = new WelcomeLogicMain(username);
         welcomeLogic.run();
+        
+        System.out.print("Enter your location: ");
+        String loc = sc.nextLine();
+
+        API.openWeatherResponse response = api.getWeatherByName(loc);
+
+        System.out.println("Temperature: "+response.main.temp+"C");
+        System.out.println("Feels like: "+response.main.feels_like+"C");
+        System.out.println("Humidity: "+response.main.humidity+"%");
+        System.out.println("Condition: "+response.weather[0].description);
+        sc.close();
     }
 }
