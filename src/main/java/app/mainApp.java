@@ -1,10 +1,13 @@
 package app;
-import java.util.*;
+import java.util.Scanner;
 import API.API;
 
 public class mainApp {
     public static void main(String[] args) {
+        System.out.println(System.getenv("OPENWEATHER_API_KEY"));
+
         API api = new API();
+        logic.ghazy g = new logic.ghazy();
         Scanner sc = new Scanner(System.in);
 
         System.out.print("Enter location: ");
@@ -14,7 +17,7 @@ public class mainApp {
 
         System.out.print("Enter journal: ");
         String journal = sc.nextLine();
-        String sentiment = api.geminiAPI(journal);
+        String sentiment = g.analyze(journal);
         System.out.println(sentiment);
 
         sc.close();

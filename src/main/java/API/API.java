@@ -27,16 +27,13 @@ public class API {
         URL url = uri.toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-        // Set HTTP method and headers
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "application/json");
 
-        // Check for successful response
         if (conn.getResponseCode() != 200) {
             throw new RuntimeException("GET failed. HTTP error code: " + conn.getResponseCode());
         }
 
-        // Read response
         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         StringBuilder sb = new StringBuilder();
         String output;
@@ -53,45 +50,100 @@ public class API {
         String[] words = str.trim().toLowerCase().split("\\s+");
         StringBuilder sb = new StringBuilder();
         for (String word : words) {
-            sb.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
+            sb.append(Character.toUpperCase(word.charAt(0)))
+              .append(word.substring(1))
+              .append(" ");
         }
         return sb.toString().trim();
     }
 
-    // Example usage
+    // =========================
+    // WEATHER API (MALAYSIA + GLOBAL)
+    // =========================
     public String weatherAPI(String userLocation) {
-        API api = new API();
+
+        String malaysiaWeather = null;
+
+        // ---------- 1️⃣ MALAYSIA WEATHER ----------
         try {
-            // --- Example GET request: Fetch latest weather forecast for Kuala Lumpur ---
             userLocation = capitalizeFirstLetter(userLocation);
             String encodedLocation = URLEncoder.encode(userLocation, "UTF-8");
 
-            String getUrl = "https://api.data.gov.my/weather/forecast/?contains="+encodedLocation+"@location__location_name&sort=date&limit=1";
-            String getResponse = api.get(getUrl);
-            
-            JSONArray forecastArray = new JSONArray(getResponse);
-            JSONObject forecast = forecastArray.getJSONObject(0);
+            String getUrl =
+                "https://api.data.gov.my/weather/forecast/?contains="
+                + encodedLocation
+                + "@location__location_name&sort=date&limit=1";
 
-            return "GET response: "+forecast.getString("summary_forecast");
+            String getResponse = get(getUrl);
+            JSONArray forecastArray = new JSONArray(getResponse);
+
+            if (forecastArray.length() > 0) {
+                JSONObject forecast = forecastArray.getJSONObject(0);
+                malaysiaWeather = forecast.getString("summary_forecast");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            malaysiaWeather = null;
         }
-    }
-        
-    public String geminiAPI(String journalInput) {
-        // Load environment variables from .env file (custom loader)
+
+        // Kalau Malaysia ada data → terus return
+        if (malaysiaWeather != null) {
+            return "MY Weather: " + malaysiaWeather;
+        }
+
+        // ---------- 2️⃣ OPENWEATHER (GLOBAL FALLBACK) ----------
+
         Map<String, String> env = EnvLoader.loadEnv("data/.env");
 
         try {
-            // ATTEMPTING GEMINI CALLS INSTEAD OF HUGGINGFACE
-            Client client = Client.builder().apiKey(env.get("GEMINI_TOKEN")).build();
-            
-            String prompt = "Analyze the sentiment of this sentence, return either POSITIVE or NEGATIVE only. Attach the word SARCASM in parentheses next to the return values if applicable.\n"+journalInput;
-            GenerateContentResponse responseGemini = client.models.generateContent("gemini-2.5-flash", prompt, null);
-            
+            String apiKey = env.get("OPENWEATHER_API_KEY");
+            if (apiKey == null) return null;
+
+            String encodedLocation = URLEncoder.encode(userLocation, "UTF-8");
+
+            String url =
+                "https://api.openweathermap.org/data/2.5/weather?q="
+                + encodedLocation
+                + "&appid=" + apiKey
+                + "&units=metric";
+
+            String response = get(url);
+            JSONObject json = new JSONObject(response);
+
+            JSONObject main = json.getJSONObject("main");
+            double temp = main.getDouble("temp");
+
+            JSONArray weatherArr = json.getJSONArray("weather");
+            String desc = weatherArr.getJSONObject(0).getString("description");
+
+            return "Global Weather: " + temp + "°C, " + desc;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    // =========================
+    // GEMINI SENTIMENT ANALYSIS
+    // =========================
+    public String geminiAPI(String journalInput) {
+
+        Map<String, String> env = EnvLoader.loadEnv("data/.env");
+
+        try {
+            Client client = Client.builder()
+                    .apiKey(env.get("GEMINI_TOKEN"))
+                    .build();
+
+            String prompt =
+                "Analyze the sentiment of this sentence, return either POSITIVE or NEGATIVE only.\n"
+                + journalInput;
+
+            GenerateContentResponse responseGemini =
+                client.models.generateContent("gemini-2.5-flash", prompt, null);
+
             client.close();
-            return "Gemini Response: "+responseGemini.text();
+            return "Gemini Response: " + responseGemini.text();
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
