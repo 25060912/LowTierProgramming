@@ -9,8 +9,6 @@ import javax.swing.JScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import logic.ghazy;
-
 public class GhazyUI extends JFrame {
     
     private JTextArea journalArea;
