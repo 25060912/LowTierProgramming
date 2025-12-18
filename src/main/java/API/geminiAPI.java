@@ -1,9 +1,5 @@
 package API;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URI;
+
 import java.util.*;
 
 import com.google.genai.Client;
