@@ -4,19 +4,19 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.io.*;
+import logic.welcomeAndSummary.*;
 
 public class JournalPage {
     private static final String JOURNAL_FILE = System.getProperty("user.home") + File.separator + "LowTierProgramming" + File.separator + "data" + File.separator + "journals.txt";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static Map<LocalDate, String> journals = new TreeMap<>();
-    private static Scanner scanner = new Scanner(System.in);
 
-    public void run() {
-        loadJournals();
-        showJournalsPage();
+    public void run(String username, Scanner scanner) {
+        loadJournals(scanner);
+        showJournalsPage(username, scanner);
     }
 
-    private static void loadJournals() {
+    private static void loadJournals(Scanner scanner) {
         File file = new File(JOURNAL_FILE);
         if (!file.exists()) {
             return;
@@ -71,7 +71,7 @@ public class JournalPage {
         }
     }
 
-    private static void showJournalsPage() {
+    private static void showJournalsPage(String username, Scanner scanner) {
         while (true) {
             System.out.println("\nJournals Page");
             System.out.println("===");
@@ -114,8 +114,8 @@ public class JournalPage {
                 int choice = Integer.parseInt(input);
 
                 if (choice == -1){
-                    System.out.println("Exiting Program . . .");
-                    System.exit(0);
+                    WelcomeLogicMain loginPage = new WelcomeLogicMain(username);
+                    loginPage.run(scanner);
                 }
 
                 if (choice < 1 || choice > dates.size()) {
@@ -126,9 +126,9 @@ public class JournalPage {
                 LocalDate selectedDate = dates.get(choice - 1);
                 
                 if (selectedDate.equals(today)) {
-                    handleTodayJournal(today);
+                    handleTodayJournal(today, scanner);
                 } else {
-                    viewJournal(selectedDate);
+                    viewJournal(selectedDate, scanner);
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
@@ -136,15 +136,15 @@ public class JournalPage {
         }
     }
 
-    private static void handleTodayJournal(LocalDate today) {
+    private static void handleTodayJournal(LocalDate today, Scanner scanner) {
         if (!journals.containsKey(today)) {
-            createJournal(today);
+            createJournal(today, scanner);
         } else {
-            showTodayOptions(today);
+            showTodayOptions(today, scanner);
         }
     }
 
-    private static void createJournal(LocalDate date) {
+    private static void createJournal(LocalDate date, Scanner scanner) {
         System.out.println("\nEnter your journal entry for " + date.format(DATE_FORMATTER) + ":");
         System.out.print("> ");
         String entry = scanner.nextLine();
@@ -163,10 +163,10 @@ public class JournalPage {
         
         switch (choice) {
             case "1":
-                viewJournal(date);
+                viewJournal(date, scanner);
                 break;
             case "2":
-                editJournal(date);
+                editJournal(date, scanner);
                 break;
             case "3":
             default:
@@ -174,7 +174,7 @@ public class JournalPage {
         }
     }
 
-    private static void editJournal(LocalDate date) {
+    private static void editJournal(LocalDate date, Scanner scanner) {
         System.out.println("\nEdit your journal entry for " + date.format(DATE_FORMATTER) + ":");
         System.out.print("> ");
         String entry = scanner.nextLine();
@@ -185,7 +185,7 @@ public class JournalPage {
         System.out.println("\nJournal updated successfully!");
     }
 
-    private static void showTodayOptions(LocalDate today) {
+    private static void showTodayOptions(LocalDate today, Scanner scanner) {
         System.out.println("\nWould you like to:");
         System.out.println("1. View Journal");
         System.out.println("2. Edit Journal");
@@ -196,10 +196,10 @@ public class JournalPage {
         
         switch (choice) {
             case "1":
-                viewJournal(today);
+                viewJournal(today, scanner);
                 break;
             case "2":
-                editJournal(today);
+                editJournal(today, scanner);
                 break;
             case "3":
             default:
@@ -207,7 +207,7 @@ public class JournalPage {
         }
     }
 
-    private static void viewJournal(LocalDate date) {
+    private static void viewJournal(LocalDate date, Scanner scanner) {
         System.out.println("\n=== Journal Entry for " + date.format(DATE_FORMATTER) + " ===");
         
         String entry = journals.get(date);
