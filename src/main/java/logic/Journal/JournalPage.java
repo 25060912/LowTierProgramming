@@ -99,9 +99,9 @@ public class JournalPage {
 
             boolean todayHasJournal = journals.containsKey(today);
             if (todayHasJournal) {
-                System.out.print("\nSelect a date to view journal, or edit the journal for today:\n> ");
+                System.out.print("\nSelect a date to view journal, edit the journal for today, or enter \'-1\' to exit the program :\n> ");
             } else {
-                System.out.print("\nSelect a date to view journal, or create a new journal for today:\n> ");
+                System.out.print("\nSelect a date to view journal, create a new journal for today, or enter \'-1\' to exit the program :\n> ");
             }
 
             String input = scanner.nextLine().trim();
@@ -112,6 +112,12 @@ public class JournalPage {
 
             try {
                 int choice = Integer.parseInt(input);
+
+                if (choice == -1){
+                    System.out.println("Exiting Program . . .");
+                    System.exit(0);
+                }
+
                 if (choice < 1 || choice > dates.size()) {
                     System.out.println("Invalid selection. Please try again.");
                     continue;
