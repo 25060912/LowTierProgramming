@@ -1,0 +1,109 @@
+* {
+  box-sizing: border-box; /* 🔥 INI KUNCI UTAMA */
+  font-family: "Segoe UI", Poppins, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #f3e8ff, #e0e9ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+  width: 100%;
+  max-width: 480px;
+  padding: 20px;
+  text-align: center;
+}
+
+/* ===== HEADER ===== */
+.header {
+  margin-bottom: 25px;
+}
+
+.icon {
+  font-size: 42px;
+  background: white;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+h1 {
+  margin: 0;
+  color: #6a4bc4;
+  font-size: 26px;
+}
+
+.subtitle {
+  color: #9a7bd8;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+/* ===== CARD ===== */
+.card {
+  background: white;
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+}
+
+/* ===== TEXTAREA ===== */
+textarea {
+  width: 100%;
+  height: 140px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1.5px solid #bfa9ff;
+  font-size: 14px;
+  resize: none; /* supaya tidak bisa keluar */
+  outline: none;
+}
+
+textarea:focus {
+  border-color: #8f7bff;
+}
+
+/* ===== BUTTON ===== */
+button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  background: linear-gradient(90deg, #f59ad6, #9aa7ff);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+}
+
+/* ===== RESULT ===== */
+#result {
+  margin-top: 16px;
+  min-height: 22px;
+  font-weight: 600;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #9a7bd8;
+}

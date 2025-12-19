@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ghazy Sentiment Analyzer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main class="container">
+
+    <header class="header">
+      <div class="icon">📖</div>
+      <h1>Sentiment Analyzer</h1>
+      <p class="subtitle">
+        Your safe space to write, reflect, and grow ✨
+      </p>
+    </header>
+
+    <section class="card">
+      <textarea
+        id="journal"
+        placeholder="Write your journal here..."
+      ></textarea>
+
+      <button type="button" id="analyzeBtn">
+        Analyze
+      </button>
+
+      <p id="result"></p>
+    </section>
+
+    <footer class="footer">
+      Every day is a new page in your story
+    </footer>
+
+  </main>
+
+  <script>
+    document.getElementById("analyzeBtn").addEventListener("click", analyze);
+
+    function analyze() {
+      const text = document.getElementById("journal").value;
+      const result = document.getElementById("result");
+
+      result.innerText = "Analyzing...";
+
+      fetch("http://localhost:8080/analyze", {
+        method: "POST",
+        body: text
+      })
+      .then(res => res.text())
+      .then(data => {
+        result.innerText = data;
+
+        if (data.toLowerCase().includes("positive")) {
+          result.style.color = "#4CAF50";
+        } else if (data.toLowerCase().includes("negative")) {
+          result.style.color = "#F44336";
+        } else {
+          result.style.color = "#6a4bc4";
+        }
+      })
+      .catch(() => {
+        result.innerText = "Error connecting to server";
+        result.style.color = "#F44336";
+      });
+    }
+  </script>
+
+</body>
+</html>

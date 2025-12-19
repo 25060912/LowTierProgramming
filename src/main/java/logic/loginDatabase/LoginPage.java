@@ -1,61 +1,72 @@
 package logic.loginDatabase;
 
-import java.util.Scanner;
+import java.util.*;
 
-public class MainApplication {
+public class LoginPage {
     
-    public static void main(String[] args) {
+    public String run(Scanner sc) {
         UserAuthenticator auth = new UserAuthenticator();
-        Scanner scanner = new Scanner(System.in);
         
         System.out.println("=== User Authentication System ===");
-        
-        while (true) {
+
+        boolean loggedIn = false;
+        while (!loggedIn) {
             System.out.println("\nChoose an option:");
             System.out.println("1. Login");
             System.out.println("2. Register");
             System.out.println("3. Exit");
             System.out.print("Enter choice: ");
             
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            String input = sc.nextLine();
+            int choice = Integer.parseInt(input);
             
             switch (choice) {
                 case 1: // Login
                     System.out.print("Enter email/username: ");
-                    String loginId = scanner.nextLine();
+                    String loginId = sc.nextLine();
                     System.out.print("Enter password: ");
-                    String loginPassword = scanner.nextLine();
+                    String loginPassword = sc.nextLine();
                     
                     if (auth.authenticate(loginId, loginPassword)) {
+                        
+                        String username = auth.getUsername(loginId); //get username from database
                         System.out.println("Login successful!");
-                        System.out.println("Welcome! You can now access the main application.");
+                        System.out.println("Welcome, " + username+ "! You can now access the main application.");
+                        loggedIn = true;
+                        return loginId;
                     } else {
                         System.out.println("Login failed! Invalid credentials.");
                     }
+
                     break;
                     
                 case 2: // Register
                     System.out.print("Enter username: ");
-                    String username = scanner.nextLine();
+                    String username = sc.nextLine();
                     System.out.print("Enter email: ");
-                    String email = scanner.nextLine();
+                    String email = sc.nextLine();
                     System.out.print("Enter password: ");
-                    String password = scanner.nextLine();
+                    String password = sc.nextLine();
                     
+                    //password confrimation
+                    System.out.print("Confirm password: ");
+                    String confirmPassword = sc.nextLine();
+                    if (!password.equals(confirmPassword)) {
+                    System.out.println("Passwords do not match! Please try again.");
+                    break;  
+                    }
                     auth.registerUser(username, email, password);
                     break;
                     
                 case 3: // Exit
                     System.out.println("Exiting application...");
                     auth.close();
-                    scanner.close();
                     System.exit(0);
                     break;
                     
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        }
+        } return null;
     }
 }
