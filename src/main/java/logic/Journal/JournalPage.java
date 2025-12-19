@@ -6,12 +6,16 @@ import java.util.*;
 import java.io.*;
 
 public class JournalPage {
+<<<<<<< HEAD
     private static final String JOURNAL_FILE = System.getProperty("user.home") + File.separator + "LowTierProgramming" + File.separator + "data" + File.separator + "journals.txt";
+=======
+    private static final String JOURNAL_FILE = "data/journals.txt";
+>>>>>>> a98fa3c9559b86b02fe41513e0cfcb7faca3e6e9
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static Map<LocalDate, String> journals = new TreeMap<>();
     private static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public void run() {
         loadJournals();
         showJournalsPage();
     }
