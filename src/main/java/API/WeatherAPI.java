@@ -48,6 +48,8 @@ public class WeatherAPI {
     //some variables thats getting reused
     private static final String API_KEY = EnvLoader.loadEnv("data/.env").get("OPENWEATHER_TOKEN");
     private static final Gson GSON = new Gson();
+    private static String userLocation = "";
+    private static int choice = 0;
 
     //weather model to get the actual geolocation
     public static class GeoLocation {
@@ -122,8 +124,10 @@ public class WeatherAPI {
     }
 
     public void run(Scanner sc) {
-        System.out.println("Where do you live? Enter a location:");
-        String userLocation = sc.nextLine();
+        if (userLocation.isEmpty()) {
+            System.out.println("Where do you live? Enter a location:");
+            userLocation = sc.nextLine();
+        }
 
         List<GeoLocation> locations = searchLocations(userLocation);
 
@@ -132,12 +136,14 @@ public class WeatherAPI {
             return;
         }
 
-        for (int i = 0; i < locations.size(); i++) {
-            System.out.println((i+1) + ". " + locations.get(i));
-        }
+        if (choice == 0) {
+            for (int i = 0; i < locations.size(); i++) {
+                System.out.println((i+1) + ". " + locations.get(i));
+            }
 
-        System.out.print("\nEnter choice: ");
-        int choice = Integer.parseInt(sc.nextLine());
+            System.out.print("\nEnter choice: ");
+            choice = Integer.parseInt(sc.nextLine());
+        }
         GeoLocation selected = locations.get(choice-1);
         WeatherResponse response = getWeather(selected.lat, selected.lon);
 

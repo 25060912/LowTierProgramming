@@ -1,9 +1,5 @@
 package API;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URI;
+
 import java.util.*;
 
 import com.google.genai.Client;
@@ -11,7 +7,7 @@ import com.google.genai.types.GenerateContentResponse;
 
 public class geminiAPI {
         
-    public String geminiResponse(String journalInput) {
+    public String geminiResponse(String prompt, String journalInput) {
         // Load environment variables from .env file (custom loader)
         Map<String, String> env = EnvLoader.loadEnv("data/.env");
 
@@ -19,7 +15,6 @@ public class geminiAPI {
             // ATTEMPTING GEMINI CALLS INSTEAD OF HUGGINGFACE
             Client client = Client.builder().apiKey(env.get("GEMINI_TOKEN")).build();
             
-            String prompt = "Analyze the sentiment of this sentence, return either POSITIVE or NEGATIVE only. Attach the word SARCASM in parentheses next to the return values if applicable.\n"+journalInput;
             GenerateContentResponse responseGemini = client.models.generateContent("gemini-2.5-flash", prompt, null);
             
             client.close();

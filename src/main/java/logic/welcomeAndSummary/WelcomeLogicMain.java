@@ -2,12 +2,8 @@ package logic.welcomeAndSummary;
 
 import logic.welcomelogic.WeeklySummaryLogic;
 import logic.Journal.*;
-
-import java.util.List;
 import java.util.Scanner;
-
 import API.WeatherAPI;
-import API.geminiAPI;
 
 public class WelcomeLogicMain {
     private String username;
@@ -24,10 +20,10 @@ public class WelcomeLogicMain {
 
         WeatherAPI api = new WeatherAPI();
         api.run(sc);
-        
+
         JournalPage journalPage = new JournalPage();
 
-        System.out.println("Choose an option:\n1. Journal Page\n2. Weekly Summary");
+        System.out.println("Choose an option:\n1. Journal Page\n2. Weekly Summary\n3. Exit App");
         boolean running = true;
 
         while (running) {
@@ -37,7 +33,7 @@ public class WelcomeLogicMain {
             switch (option) {
                 case 1: {
                     running = false;
-                    journalPage.run();
+                    journalPage.run(username, sc);
                     break;
                 }
                 case 2: {
@@ -58,6 +54,10 @@ public class WelcomeLogicMain {
                     summary.addDailyRecord("Stormy", "Anxious");
 
                     System.out.println(summary.getWeeklySummary());
+                }
+                case 3: {
+                    System.out.println("See you again next time!");
+                    System.exit(0);
                 }
                 default: {
                     System.out.println("Invalid input");
